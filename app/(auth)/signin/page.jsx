@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
 import Link from "next/link";
 import React from "react";
-import SignInForm from "../signup/sign_in_form";
+import SignInForm from "./sign_in_form";
 
 const Page = () => {
   return (
