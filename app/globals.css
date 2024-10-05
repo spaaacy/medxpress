@@ -5,34 +5,13 @@
 @layer base {
   main {
     margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
     width: 100%;
-    max-width: 2000px;
+    max-width: 1260px;
     padding-top: 1rem;
     padding-bottom: 1rem;
     padding-left: 2rem;
     padding-right: 2rem;
-  }
-
-  /* Custom scrollbar styles */
-  ::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: #f0f0f0; /* Light gray background for the scrollbar track */
-    border-radius: 10px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: #4CC8B1; /* Gray thumb for the scrollbar */
-    border-radius: 10px;
-    border: 3px solid #f0f0f0; /* Border to create padding around the thumb */
-  }
-
-  /* Scrollbar styles for Firefox */
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: #a8a8a8 #f0f0f0;
   }
 }
