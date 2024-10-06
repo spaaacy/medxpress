@@ -1,7 +1,7 @@
 import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
-import FeaturesSection from "@/components/FeaturesSection"; 
-import ProductGrid from "@/components/ProductGrid"; 
+import FeaturesSection from "@/components/FeaturesSection";
+import ProductGrid from "@/components/ProductGrid";
 
 export default function Home() {
   return (
@@ -9,7 +9,7 @@ export default function Home() {
       <NavBar />
       <main className="flex-grow">
         <FeaturesSection />
-        <ProductGrid />
+        {/* <ProductGrid /> */}
       </main>
       <Footer />
     </div>
