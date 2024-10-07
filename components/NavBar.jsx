@@ -1,8 +1,27 @@
+"use client";
+
+import { UserContext } from "@/context/UserContext";
+import { supabase } from "@/utils/supabase";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useContext } from "react";
 
 const NavBar = () => {
+  const { session } = useContext(UserContext);
+  const router = useRouter();
+
+  const signOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      location.reload();
+      router.push("/");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <nav>
       {/* Top Navigation Bar */}
@@ -38,18 +57,24 @@ const NavBar = () => {
           <input type="text" placeholder="Search products" className="w-full p-2 rounded" />
         </div>
 
-        {/* Sign In Link */}
-        {/* Sign In Section */}
         <div className="mx-4 flex flex-col leading-tight">
-          <Link href="/signin" className="font-semibold hover:underline">
-            Sign In
-          </Link>
-          <span className="text-xs">
-            Not registered?{" "}
-            <Link href="/signup" className="underline">
-              Create Account.
-            </Link>
-          </span>
+          {session?.data.session ? (
+            <button onClick={signOut} type="button" className="text-sm -mx-2 hover:underline">
+              Sign Out
+            </button>
+          ) : (
+            <>
+              <Link href="/signin" className="font-semibold hover:underline">
+                Sign In
+              </Link>
+              <span className="text-xs">
+                Not registered?{" "}
+                <Link href="/signup" className="underline">
+                  Create Account.
+                </Link>
+              </span>
+            </>
+          )}
         </div>
       </div>
     </nav>

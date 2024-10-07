@@ -1,9 +1,21 @@
 "use client";
 
+import { UserContext } from "@/context/UserContext";
+import { supabase } from "@/utils/supabase";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
 
 const SignInForm = () => {
+  const { session } = useContext(UserContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session?.data.session) {
+      router.push("/");
+    }
+  }, [session]);
+
   // State to store the form input values
   const [formData, setFormData] = useState({
     email: "",
@@ -19,10 +31,19 @@ const SignInForm = () => {
     });
   };
 
-  // Handle form submission - not fully implemented yet
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    console.log("Sign in successful!", formData);
+    if (!session) return;
+    const { data: authData, error } = await supabase.auth.signInWithPassword({
+      email: formData.email,
+      password: formData.password,
+    });
+
+    if (authData.user && authData.session) {
+      location.reload();
+    } else {
+      console.error(error);
+    }
   };
 
   return (
