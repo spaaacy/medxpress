@@ -1,19 +1,72 @@
 "use client";
 
-import { useState } from "react";
+import { UserContext } from "@/context/UserContext";
+import { supabase } from "@/utils/supabase";
+import { useRouter } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const SignUpForm = () => {
+  const { session } = useContext(UserContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session?.data.session) {
+      router.push("/");
+    }
+  }, [session]);
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (!session || session.data.session) return;
+    console.log(formData);
+    try {
+      const { data: authData, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+      });
+      if (error) throw error;
+
+      const response = await fetch("/api/user/create", {
+        method: "POST",
+        body: JSON.stringify({
+          user_id: authData.user.id,
+          email: formData.email,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          address: formData.address,
+          city: formData.city,
+          state: formData.state,
+          zip_code: formData.zipCode,
+          phone_number: formData.phoneNumber,
+        }),
+      });
+
+      if (response.status === 500) {
+        const { error } = await response.json();
+        throw error;
+      }
+
+      toast.success("Account created");
+      setTimeout(() => {
+        router.push("/");
+      }, 2000);
+    } catch (error) {
+      toast.error("Oops, something went wrong...");
+      console.error(error);
+    }
+  };
+
   // State to store the form input values
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    addressLine1: "",
-    addressLine2: "",
+    address: "",
     city: "",
     state: "",
-    zip: "",
-    phone: "",
+    zipCode: "",
+    phoneNumber: "",
     password: "",
   });
 
@@ -55,26 +108,20 @@ const SignUpForm = () => {
     });
   };
 
-  // Handle form submission - not fully implemented yet
-  const onSubmit = (e) => {
-    e.preventDefault();
-    console.log("Sign up successful!", formData);
-  };
-
   return (
     <form onSubmit={onSubmit}>
       <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
         <div>
-          <label class="block p-3">
+          <label className="block p-3">
             {/* First Name Input */}
-            <span class="block text-sm font-medium text-slate-700">First Name</span>
+            <span className="block text-sm font-medium text-slate-700">First Name</span>
             <input
               type="text"
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
               required
-              class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
+              className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
                                 rounded-md text-sm shadow-sm placeholder-slate-400
                                 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
                                 invalid:border-pink-500 invalid:text-pink-600
@@ -84,16 +131,16 @@ const SignUpForm = () => {
           </label>
         </div>
         <div>
-          <label class="block p-3">
+          <label className="block p-3">
             {/* Last Name Input */}
-            <span class="block text-sm font-medium text-slate-700">Last Name</span>
+            <span className="block text-sm font-medium text-slate-700">Last Name</span>
             <input
               type="text"
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
               required
-              class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
+              className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
                                 rounded-md text-sm shadow-sm placeholder-slate-400
                                 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
                                 invalid:border-pink-500 invalid:text-pink-600
@@ -103,17 +150,17 @@ const SignUpForm = () => {
           </label>
         </div>
 
-        <div class="sm:col-span-2">
-          <label class="block p-3">
+        <div className="sm:col-span-2">
+          <label className="block p-3">
             {/* Email Input */}
-            <span class="block text-sm font-medium text-slate-700">Email</span>
+            <span className="block text-sm font-medium text-slate-700">Email</span>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               required
-              class="mt-1 block w-full px-3 py-2 bg-white peer border border-slate-300 
+              className="mt-1 block w-full px-3 py-2 bg-white peer border border-slate-300 
                                 rounded-md text-sm shadow-sm placeholder-slate-400
                                 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
                                 invalid:border-pink-500 invalid:text-pink-600
@@ -127,17 +174,17 @@ const SignUpForm = () => {
           </label>
         </div>
 
-        <div class="sm:col-span-2">
-          <label class="block p-3">
+        <div className="sm:col-span-2">
+          <label className="block p-3">
             {/* Address Input */}
-            <span class="block text-sm font-medium text-slate-700">Address</span>
+            <span className="block text-sm font-medium text-slate-700">Address</span>
             <input
               type="text"
-              name="addressLine1"
-              value={formData.addressLine1}
+              name="address"
+              value={formData.address}
               onChange={handleChange}
               required
-              class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
+              className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
                                 rounded-md text-sm shadow-sm placeholder-slate-400
                                 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
                                 invalid:border-pink-500 invalid:text-pink-600
@@ -145,31 +192,20 @@ const SignUpForm = () => {
                                 placeholder:text-slate-400 "
               placeholder="Street address"
             />
-            <input
-              type="text"
-              name="addressLine2"
-              value={formData.addressLine2}
-              onChange={handleChange}
-              class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
-                                rounded-md text-sm shadow-sm placeholder-slate-400
-                                focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-                                placeholder:text-slate-400"
-              placeholder="Apt, suite, unit, building, floor, etc."
-            />
           </label>
         </div>
 
-        <div class="sm:col-span-2">
-          <label class="block p-3">
+        <div className="sm:col-span-2">
+          <label className="block p-3">
             {/* City Input */}
-            <span class="block text-sm font-medium text-slate-700">City</span>
+            <span className="block text-sm font-medium text-slate-700">City</span>
             <input
               type="text"
               name="city"
               value={formData.city}
               onChange={handleChange}
               required
-              class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
+              className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
                                 rounded-md text-sm shadow-sm placeholder-slate-400
                                 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
                                 invalid:border-pink-500 invalid:text-pink-600
@@ -180,16 +216,16 @@ const SignUpForm = () => {
         </div>
 
         <div>
-          <label class="block p-3">
+          <label className="block p-3">
             {/* State Input */}
-            <span class="block text-sm font-medium text-slate-700">State</span>
+            <span className="block text-sm font-medium text-slate-700">State</span>
             <input
               type="text"
               name="state"
               value={formData.state}
               onChange={handleChange}
               required
-              class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
+              className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
                                 rounded-md text-sm shadow-sm placeholder-slate-400
                                 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
                                 invalid:border-pink-500 invalid:text-pink-600
@@ -200,16 +236,16 @@ const SignUpForm = () => {
         </div>
 
         <div>
-          <label class="block p-3">
+          <label className="block p-3">
             {/* ZIP Code Input */}
-            <span class="block text-sm font-medium text-slate-700">ZIP Code</span>
+            <span className="block text-sm font-medium text-slate-700">ZIP Code</span>
             <input
-              type="text"
-              name="zip"
-              value={formData.zip}
+              type="number"
+              name="zipCode"
+              value={formData.zipCode}
               onChange={handleChange}
               required
-              class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
+              className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
                                 rounded-md text-sm shadow-sm placeholder-slate-400
                                 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
                                 invalid:border-pink-500 invalid:text-pink-600
@@ -219,17 +255,17 @@ const SignUpForm = () => {
           </label>
         </div>
 
-        <div class="sm:col-span-2">
-          <label class="block p-3">
+        <div className="sm:col-span-2">
+          <label className="block p-3">
             {/* Phone Number Input */}
-            <span class="block text-sm font-medium text-slate-700">Phone Number</span>
+            <span className="block text-sm font-medium text-slate-700">Phone Number</span>
             <input
-              type="text"
-              name="phone"
-              value={formData.phone}
+              type="number"
+              name="phoneNumber"
+              value={formData.phoneNumber}
               onChange={handleChange}
               required
-              class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
+              className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
                                 rounded-md text-sm shadow-sm placeholder-slate-400
                                 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
                                 invalid:border-pink-500 invalid:text-pink-600
@@ -240,17 +276,17 @@ const SignUpForm = () => {
           </label>
         </div>
 
-        <div class="sm:col-span-2">
+        <div className="sm:col-span-2">
           <label className="block p-3">
             {/* Password Input */}
-            <span class="block text-sm font-medium text-slate-700">Create Password</span>
+            <span className="block text-sm font-medium text-slate-700">Create Password</span>
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               required
-              class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
+              className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
                                 rounded-md text-sm shadow-sm placeholder-slate-400
                                 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
                                 invalid:border-pink-500 invalid:text-pink-600

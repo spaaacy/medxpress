@@ -9,15 +9,11 @@ import ProductGrid from "@/components/ProductGrid";
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleSearch = (term) => {
-    setSearchTerm(term);
-  };
-
   return (
     <div className="flex flex-col min-h-screen">
-      <NavBar onSearch={handleSearch} />
+      <NavBar setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
       <main className="flex-grow">
-        <FeaturesSection />
+        {!searchTerm && <FeaturesSection />}
         <ProductGrid searchTerm={searchTerm} />
       </main>
       <Footer />

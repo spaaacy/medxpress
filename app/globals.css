@@ -25,7 +25,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: #4CC8B1; /* Gray thumb for the scrollbar */
+    background-color: #4cc8b1; /* Gray thumb for the scrollbar */
     border-radius: 10px;
     border: 3px solid #f0f0f0; /* Border to create padding around the thumb */
   }
@@ -34,5 +34,12 @@
   * {
     scrollbar-width: thin;
     scrollbar-color: #a8a8a8 #f0f0f0;
+  }
+
+  /* Disable arrows for number input */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 }

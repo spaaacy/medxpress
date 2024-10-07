@@ -2,6 +2,7 @@ import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
 import React from "react";
 import SignUpForm from "../../../components/auth/SignUpForm";
+import { Toaster } from "react-hot-toast";
 
 const Page = () => {
   return (
@@ -18,6 +19,7 @@ const Page = () => {
       </main>
 
       <Footer />
+      <Toaster />
     </div>
   );
 };
