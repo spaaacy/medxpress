@@ -46,6 +46,42 @@ const products = [
   },
   {
     id: 5,
+    name: "Vitamin C",
+    slug: "vitamin-C",
+    image: "/vitamin-C.png",
+    category: "Vitamins & Supplements",
+    price: "$17.99",
+    description: "Vitamin C supports immune system and antioxidant health. This daily supplement is ideal for individuals with compromised immunity or iron deficiency."
+  },
+  {
+    id: 6,
+    name: "Magnesium",
+    slug: "magnesium",
+    image: "/magnesium.png",
+    category: "Vitamins & Supplements",
+    price: "$9.99",
+    description: "Magnesium maintains bone mineralization and supports bone health, energy metabolism, nerve impulses and protein formation. This supplement is ideal for people with migraines or frequent muscle spasms."
+  },
+  {
+    id: 7,
+    name: "Vitamin B12",
+    slug: "vitamin-B12",
+    image: "/vitamin-B12.png",
+    category: "Vitamins & Supplements",
+    price: "$14.99",
+    description: "Vitamin B12 helps support brain cell function and mood health. This supplement is important for proper red blood cell formation and helps reduce fatigue for those low in B12 vitamins."
+  },
+  {
+    id: 8,
+    name: "Vitamin K2",
+    slug: "vitamin-K2",
+    image: "/vitamin-K2.png",
+    category: "Vitamins & Supplements",
+    price: "$12.99",
+    description: "Vitamin K2 enhances bone formation and helps with calcium metabolism. This supplement is ideal for individuals with low bone health."
+  },
+  {
+    id: 9,
     name: "Toothpaste",
     slug: "toothpaste",
     image: "/toothpaste.webp",
@@ -54,7 +90,7 @@ const products = [
     description: "A fluoride toothpaste that offers long-lasting protection against cavities, plaque buildup, and gum disease. Its minty fresh flavor leaves your mouth feeling clean and refreshed after every brush."
   },
   {
-    id: 6,
+    id: 10,
     name: "Moisturizer",
     slug: "moisturizer",
     image: "/moisturizer.webp",
@@ -63,7 +99,7 @@ const products = [
     description: "A lightweight, hydrating moisturizer formulated with natural ingredients to nourish the skin, lock in moisture, and provide a smooth, radiant complexion. Suitable for all skin types."
   },
   {
-    id: 7,
+    id: 11,
     name: "Energy Bars",
     slug: "energy-bars",
     image: "/energy-bars.webp",
@@ -72,7 +108,7 @@ const products = [
     description: "Delicious, nutrient-packed energy bars that provide a quick boost of energy. Perfect for pre- or post-workout snacks, or to keep you going throughout the day. Made with wholesome ingredients like nuts, oats, and dried fruits."
   },
   {
-    id: 8,
+    id: 12,
     name: "Yoga Mat",
     slug: "yoga-mat",
     image: "/yoga-mat.webp",
@@ -81,7 +117,7 @@ const products = [
     description: "A high-quality, non-slip yoga mat that provides excellent grip and cushioning for your yoga practice. Designed to offer comfort and stability whether you are a beginner or a seasoned yogi."
   },
   {
-    id: 9,
+    id: 13,
     name: "Shampoo",
     slug: "shampoo",
     image: "/shampoo.webp",
@@ -90,7 +126,7 @@ const products = [
     description: "A gentle shampoo formulated for all hair types. Enriched with natural extracts to cleanse, hydrate, and nourish your hair, leaving it soft, shiny, and free from buildup."
   },
   {
-    id: 10,
+    id: 14,
     name: "Sunscreen",
     slug: "sunscreen",
     image: "/sunscreen.webp",
@@ -99,7 +135,7 @@ const products = [
     description: "A broad-spectrum sunscreen that protects against both UVA and UVB rays. Lightweight, non-greasy formula that absorbs quickly, providing reliable protection without leaving a white cast on the skin."
   },
   {
-    id: 11,
+    id: 15,
     name: "Protein Powder",
     slug: "protein-powder",
     image: "/protein.webp",
@@ -108,7 +144,7 @@ const products = [
     description: "A premium protein powder blend designed to support muscle growth and recovery. Made from high-quality whey protein, it's ideal for athletes and fitness enthusiasts looking to boost their protein intake."
   },
   {
-    id: 12,
+    id: 16,
     name: "Resistance Bands",
     slug: "resistance-bands",
     image: "/resistance-bands.webp",
