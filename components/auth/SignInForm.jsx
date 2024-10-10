@@ -48,16 +48,16 @@ const SignInForm = () => {
 
   return (
     <form onSubmit={onSubmit}>
-      <label class="block p-3">
+      <label className="block p-3">
         {/* Email Input */}
-        <span class="block text-sm font-medium text-slate-700">Email</span>
+        <span className="block text-sm font-medium text-slate-700">Email</span>
         <input
           type="email"
           name="email"
           value={formData.email}
           onChange={handleChange}
           required
-          class="mt-1 block w-full px-3 py-2 bg-white peer border border-slate-300 
+          className="mt-1 block w-full px-3 py-2 bg-white peer border border-slate-300 
                         rounded-md text-sm shadow-sm placeholder-slate-400
                         focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
                         invalid:border-pink-500 invalid:text-pink-600
@@ -72,14 +72,14 @@ const SignInForm = () => {
 
       <label className="block p-3">
         {/* Password Input */}
-        <span class="block text-sm font-medium text-slate-700">Password</span>
+        <span className="block text-sm font-medium text-slate-700">Password</span>
         <input
           type="password"
           name="password"
           value={formData.password}
           onChange={handleChange}
           required
-          class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
+          className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 
                         rounded-md text-sm shadow-sm placeholder-slate-400
                         focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
                         invalid:border-pink-500 invalid:text-pink-600
