@@ -15,11 +15,11 @@ const ProductGrid = ({ searchTerm }) => {
       try {
         let response;
         if (searchTerm) {
-          response = await fetch(`/api/products?search=${searchTerm}`, {
+          response = await fetch(`/api/product?search=${searchTerm}`, {
             method: "GET",
           });
         } else {
-          response = await fetch(`/api/products`, {
+          response = await fetch(`/api/product`, {
             method: "GET",
           });
         }
