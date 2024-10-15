@@ -10,4 +10,4 @@ const Page = () => {
   return <div></div>;
 };
 
-export default page;
+export default Page;
