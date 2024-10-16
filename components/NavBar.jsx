@@ -13,7 +13,9 @@ const NavBar = ({ searchTerm, setSearchTerm }) => {
   const router = useRouter();
 
   useEffect(() => {
-    setHideSearch(window.location.pathname === "/signup" || window.location.pathname === "/signin");
+    setHideSearch(
+      window.location.pathname === "/signup" || window.location.pathname === "/signin"
+    );
   }, []);
 
   const signOut = async () => {
@@ -46,15 +48,27 @@ const NavBar = ({ searchTerm, setSearchTerm }) => {
         </div>
 
         {!hideSearch && (
-          <div className="flex-grow mx-4">
-            <input
-              type="text"
-              placeholder="Search products"
-              className="w-full p-2 rounded text-black"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
+          <>
+            <div className="flex-grow mx-4">
+              <input
+                type="text"
+                placeholder="Search products"
+                className="w-full p-2 rounded text-black"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            {/* Conditionally render buttons based on hideSearch */}
+            <div className="flex items-center mx-4 space-x-2">
+              <Link href="/view-prescriptions" className="bg-[#4cc8b1] hover:bg-[#7aaea2] text-white font-semibold py-2 px-4 rounded">
+                View Prescriptions
+              </Link>
+              <Link href="/upload-prescription" className="bg-[#4cc8b1] hover:bg-[#7aaea2] text-white font-semibold py-2 px-4 rounded">
+                Upload Prescriptions
+              </Link>
+            </div>
+          </>
         )}
 
         <div className="ml-auto mx-4 flex flex-col leading-tight">
