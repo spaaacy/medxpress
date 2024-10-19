@@ -8,14 +8,12 @@ import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 
 const NavBar = ({ searchTerm, setSearchTerm }) => {
-  const { session } = useContext(UserContext);
+  const { session, user } = useContext(UserContext);
   const [hideSearch, setHideSearch] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    setHideSearch(
-      window.location.pathname === "/signup" || window.location.pathname === "/signin"
-    );
+    setHideSearch(window.location.pathname === "/signup" || window.location.pathname === "/signin");
   }, []);
 
   const signOut = async () => {
@@ -49,7 +47,7 @@ const NavBar = ({ searchTerm, setSearchTerm }) => {
 
         {!hideSearch && (
           <>
-            <div className="flex-grow mx-4">
+            <div className="flex-grow">
               <input
                 type="text"
                 placeholder="Search products"
@@ -60,18 +58,37 @@ const NavBar = ({ searchTerm, setSearchTerm }) => {
             </div>
 
             {/* Conditionally render buttons based on hideSearch */}
-            <div className="flex items-center mx-4 space-x-2">
-              <Link href="/view-prescriptions" className="bg-[#4cc8b1] hover:bg-[#7aaea2] text-white font-semibold py-2 px-4 rounded">
-                View Prescriptions
-              </Link>
-              <Link href="/upload-prescription" className="bg-[#4cc8b1] hover:bg-[#7aaea2] text-white font-semibold py-2 px-4 rounded">
-                Upload Prescriptions
-              </Link>
-            </div>
+            {user && (
+              <div className="flex items-center mx-4 space-x-2">
+                {user.admin ? (
+                  <>
+                    <Link
+                      href="/view-prescriptions"
+                      className="bg-[#4cc8b1] hover:bg-[#7aaea2] text-white font-semibold py-2 px-4 rounded"
+                    >
+                      View Prescriptions
+                    </Link>
+                    <Link
+                      href="/product/add"
+                      className="bg-[#4cc8b1] hover:bg-[#7aaea2] text-white font-semibold py-2 px-4 rounded"
+                    >
+                      Add Product
+                    </Link>
+                  </>
+                ) : (
+                  <Link
+                    href="/upload-prescription"
+                    className="bg-[#4cc8b1] hover:bg-[#7aaea2] text-white font-semibold py-2 px-4 rounded"
+                  >
+                    Upload Prescriptions
+                  </Link>
+                )}
+              </div>
+            )}
           </>
         )}
 
-        <div className="ml-auto mx-4 flex flex-col leading-tight">
+        <div className="ml-auto mx-4 flex flex-col leading-tight pl-2">
           {session?.data.session ? (
             <button onClick={signOut} type="button" className="text-sm -mx-2 hover:underline">
               Sign Out
