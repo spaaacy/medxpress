@@ -43,7 +43,7 @@ const Page = () => {
       formData.append(
         "product",
         JSON.stringify({
-          title: data.title,
+          name: data.name,
           description: data.description,
           price: data.price,
         })
@@ -52,9 +52,15 @@ const Page = () => {
 
       const response = await fetch("/api/product/create", {
         method: "POST",
+        headers: {
+          "X-Supabase-Auth": session.data.session.access_token + " " + session.data.session.refresh_token,
+        },
         body: formData,
       });
-      if (response.status !== 201) {
+      if (response.status === 201) {
+        const { productId } = await response.json();
+        router.push(`/product/${productId}`);
+      } else {
         const { error } = await response.json();
         throw error;
       }
@@ -116,14 +122,14 @@ const Page = () => {
             )}
 
             <input
-              placeholder="Title"
+              placeholder="name"
               className="focus:bg-gray-300 rounded-md bg-gray-200 p-2 text-sm focus:border-white focus:ring-0 focus:outline-none"
-              {...register("title", { required: "Title is required" })}
+              {...register("name", { required: "name is required" })}
               type="text"
             />
-            {errors.title && (
+            {errors.name && (
               <p role="alert" className="text-xs text-red-500">
-                {errors.title.message}
+                {errors.name.message}
               </p>
             )}
             <textarea

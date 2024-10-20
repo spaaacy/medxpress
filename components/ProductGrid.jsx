@@ -61,7 +61,11 @@ const ProductGrid = ({ searchTerm }) => {
                     <Link key={item.id} href={`/product/${item.id}`} className="flex flex-col items-center">
                       {/* Will need this for a product page to a specific product */}
                       <Image
-                        src={item.image || "/placeholder.jpg"} // Placeholder if image is not available. Will add images later
+                        src={
+                          item.image_id
+                            ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}${process.env.NEXT_PUBLIC_STORAGE_PATH}/product-image/${item.id}/${item.image_id}`
+                            : "/placeholder.jpg"
+                        } // Placeholder if image is not available. Will add images later
                         alt={item.name}
                         width={250}
                         height={250}
