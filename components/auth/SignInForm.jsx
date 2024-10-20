@@ -40,7 +40,7 @@ const SignInForm = () => {
     });
 
     if (authData.user && authData.session) {
-      location.reload();
+      router.push("/");
     } else {
       console.error(error);
     }
