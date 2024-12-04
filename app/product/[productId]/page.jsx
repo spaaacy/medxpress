@@ -1,16 +1,22 @@
 "use client";
 
-import { notFound, useParams, useSearchParams } from "next/navigation";
+import { notFound, useParams, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
+import { loadStripe } from "@stripe/stripe-js";
+import { UserContext } from "@/context/UserContext";
+import toast, { Toaster } from "react-hot-toast";
 
 const Page = () => {
+  const { session } = useContext(UserContext);
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [cart, setCart] = useState([]);
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -22,6 +28,14 @@ const Page = () => {
         console.error(error);
       }
     };
+
+    if (searchParams.get("cancelled") === "true") {
+      toast.error("Payment unsuccessful");
+      router.replace(`/product/${productId}`, undefined, { shallow: true });
+    } else if (searchParams.get("success") === "true") {
+      toast.success("Payment successful");
+      router.replace(`/product/${productId}`, undefined, { shallow: true });
+    }
 
     fetchProduct();
   }, [productId]);
@@ -35,6 +49,30 @@ const Page = () => {
     alert(`${product.name} added to cart!`);
   };
 
+  const handlePayment = async () => {
+    const userId = session.data.session.user.id;
+    if (!userId) return;
+    try {
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        body: JSON.stringify({
+          productId: product.id,
+          priceId: product.stripe_product.default_price,
+        }),
+      });
+      const result = await response.json();
+      if (response.status !== 200) {
+        throw Error("Something went wrong");
+      }
+      const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+      if (!stripe) {
+        throw Error("Something went wrong");
+      }
+      await stripe.redirectToCheckout({ sessionId: result.session.id });
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="flex flex-col min-h-screen">
       <NavBar />
@@ -59,7 +97,7 @@ const Page = () => {
               <p className="text-lg mb-4 text-gray-600">{product.description}</p>
               <p className="text-2xl font-semibold mb-6">{product.price}</p>
               <button
-                onClick={addToCart}
+                onClick={handlePayment}
                 style={{ backgroundColor: "#4cc8b1" }}
                 className="text-white px-6 py-3 rounded-md hover:brightness-90"
               >
@@ -70,6 +108,7 @@ const Page = () => {
         </div>
       </main>
       <Footer />
+      <Toaster />
     </div>
   );
 };
