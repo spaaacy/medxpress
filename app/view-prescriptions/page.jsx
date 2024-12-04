@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
+import { supabase } from "@/utils/supabase";
 
 const pdfFiles = [
   "/pdfs/prescription_1.pdf",
@@ -19,6 +20,27 @@ const pdfFiles = [
 ];
 
 const ViewPrescriptions = () => {
+  const [prescriptions, setPrescriptions] = useState([]);
+
+  const fetchPrescriptions = async () => {
+    try {
+      const { data, error } = await supabase.storage.from("prescription-pdf").list("", {
+        limit: 100,
+        offset: 0,
+        sortBy: { column: "name", order: "asc" },
+      });
+      if (error) throw error;
+      setPrescriptions(data.filter((p) => p.name != ".emptyFolderPlaceholder"));
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPrescriptions();
+  }, []);
+
   const [selectedPdf, setSelectedPdf] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -40,15 +62,19 @@ const ViewPrescriptions = () => {
         <h1 className="text-2xl font-semibold mb-6">Available Prescriptions</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {pdfFiles.map((pdf, index) => (
+          {prescriptions.map((pdf, index) => (
             <div
               key={index}
               className="border border-gray-300 rounded-lg shadow-md p-2 cursor-pointer"
-              onClick={() => openModal(pdf)}
+              onClick={() =>
+                openModal(
+                  `${process.env.NEXT_PUBLIC_SUPABASE_URL}${process.env.NEXT_PUBLIC_STORAGE_PATH}/prescription-pdf/${pdf.name}`
+                )
+              }
             >
               <div className="pdf-preview h-40 overflow-hidden">
                 <iframe
-                  src={`${pdf}#page=1`}
+                  src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}${process.env.NEXT_PUBLIC_STORAGE_PATH}/prescription-pdf/${pdf.name}#page=1`}
                   width="100%"
                   height="100%"
                   title={`Prescription ${index + 1}`}
@@ -67,12 +93,7 @@ const ViewPrescriptions = () => {
           </div>
           {selectedPdf && (
             <div className="pdf-viewer h-screen">
-              <iframe
-                src={selectedPdf}
-                width="100%"
-                height="100%"
-                title="PDF Viewer"
-              />
+              <iframe src={selectedPdf} width="100%" height="100%" title="PDF Viewer" />
             </div>
           )}
         </Modal>
